@@ -111,6 +111,9 @@ namespace OpenSupplicant
 
         public static Dictionary<byte, List<byte[]>> ParseResponseBody(byte[] buf)
         {
+            //  DoS :数组溢出崩溃 2015/12/21
+            if (buf.Length <= 16) return null;
+
             byte[] hash = new byte[16];
             for (byte i = 0; i < 16; i++)
             {

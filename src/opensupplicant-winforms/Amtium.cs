@@ -171,7 +171,9 @@ namespace OpenSupplicant
                 {
                     while (m_client3848 != null)
                     {
-                        byte[] bytes = m_client3848.Receive(ref m_endPoint3848);
+                        //  Exploit Fix:流量转移 2015/12/21
+                        IPEndPoint remove_endport=new IPEndPoint(IPAddress.Any,0);
+                        byte[] bytes = m_client3848.Receive(ref remove_endport);
                         unpack(bytes);
                     }
                 }
@@ -185,6 +187,8 @@ namespace OpenSupplicant
                 {
                     while (m_client4999 != null)
                     {
+                        //  Exploit Fix:流量转移 2015/12/21
+                        IPEndPoint remove_endport = new IPEndPoint(IPAddress.Any, 0);
                         byte[] bytes = m_client4999.Receive(ref m_endPoint4999);
                         unpack(bytes);
                     }
@@ -390,7 +394,10 @@ namespace OpenSupplicant
 
                     OnGotServices(new AmtiumGotServicesEventArgs(services.ToArray()));
                     break;
-                case ProtocalUtil.ACTION_DISCONNECT:    // 中断连接
+
+                    //  DoS: 数据包校验不完全可以发送任意数据包强制下线 2015/12/21
+                /*case ProtocalUtil.ACTION_DISCONNECT:    // 中断连接
+                    
                     Logout();
 
                     m_status = AmtiumStatus.Disconnected;
@@ -400,7 +407,7 @@ namespace OpenSupplicant
                         (short)result[ProtocalUtil.FIELD_REASON][0][0]
                         ));
                     break;
-                /*case ProtocalUtil.ACTION_CONFIRM_RET: // 旧协议，已废弃
+                case ProtocalUtil.ACTION_CONFIRM_RET: // 旧协议，已废弃
                     break;*/
                 case ProtocalUtil.ACTION_SERVER_RET:    // 获取服务器返回
                     byte[] server = result[ProtocalUtil.FIELD_SERVER][0];
