@@ -498,7 +498,8 @@ namespace OpenSupplicant
                 case AmtiumStatus.LoggingIn:
                     if (MessageBox.Show("登录超时，可能是网络连接出问题了…", "操作超时", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation) == DialogResult.Retry)
                     {
-                        Login();
+                        //  Exploit Fix:流量转移之后重发登陆数据包 2015/12/21
+                        //  Login();
                     }
                     else
                     {
